@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Igor & Sons </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+
+    <meta http-equiv="refresh" content="3" /> 
+
+  <style type="text/css" >
+    /* FIX NAVBAR HIDING TOP OF THE TEXT */
+    body { padding-top: 40px; }
+    @media screen and (max-width: 768px) {
+      body { padding-top: 0px; }
+    }
+  </style>
+
+  </head>
+  <body>
+
+
+   <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Igor & Sons</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Notes</a></li>
+            <!-- <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div> 
+
+  <div class="container " style=" "  >
+
+      <!-- 1st row -->
+      <div class="row" style="padding-top:25px;">
+        <div class="col-lg-12">
+        <ol class="breadcrumb"> 
+                <li><a href="#">Home</a></li> </a></li> 
+                <li><a href="#">Notes</a></li> </a></li> 
+                <li class="active"> Direct-Path INSERT-VALUES </li> </ol> 
+        </div>
+      </div>
+      <!-- 1st row -->
+      <div class="row">
+        <div class="col-lg-7">
+          <h2>APPEND_VALUES hint</h2>
+          <p> 
+          <button style="padding-left:10px" class="btn btn-info">
+            <span class=""> oracle </span> 
+          </button>
+
+          <button style="padding-left:10px" class="btn btn-info">
+            <span class=""> insert </span> 
+          </button>
+
+          <button style="padding-left:10px" class="btn btn-info">
+            <span class=""> jdbc </span> 
+          </button>
+          <p>
+          
+          In previous Oracle versions, <code>INSERT INTO T1 (...) VALUES( ... )</code> always passed by buffer cache. So, during load, data went to cache before being inserted into table. This is also called conventional insert. 
+          <p> Starting with Oracle 11.2, there is another option: the new <code>APPEND_VALUES</code> hint hint. Syntax:
+          <p> <code>INSERT <strong>/*+ APPEND_VALUES */</strong> INTO T1 (...) VALUES( ... )</code>  </p> 
+          
+          So, if your session had this profile: <p> ... EVENTS ... </p>
+          events like <i>free buffer waits</i> will not appear any more. You can get something like <p> ... New profile here ... </p>
+          <p>Also log sync waits are less used than before. </p>
+          <p> All in all you get better performance. </p>
+
+          <p>Using JDBC, you need to commit changes after execution: </p>
+          <p><code> pst.executeBatch();<br> conn.commit();</code></p>
+          
+          <p><code> pst.executeBatch();</code> <strong>--> OK</strong><br> 
+          <code>conn.commit();</code>: </p>
+
+          <p>But </p>
+          <p><code> pst.executeBatch();</code> 
+          <p><code> ... </code> 
+
+          <p><code> pst.executeBatch();</code> <strong>--> NOK, exception raised</strong><br> 
+          <code>conn.commit();</code>: </p>
+
+          <h4> Considerations </h4>
+          <p>
+            <ul>
+              <li>During load, the table can not be manipulated by DML in other sessions.</li>
+              <li>It always goes above HWM (available space not reused). From this aspect, use minimum number of executeBatch() commands during load. </li>
+            </ul>
+          </p>
+
+          <h4> Parallel load </h4>
+          If two sessions inserts into same table:
+          <p>Session one: <code> <br> ... <br> pst.executeBatch();</code> </p>
+          <p>Session two: <code> <br> ... <br> pst.executeBatch();</code> <strong> --> blocked on <code>TM: enq</code> until first session does commit or rollback </strong><br> 
+          </p>
+
+          <h4> Parallel load of partitioned table </h4>
+          Two sessions can load concurrently different partitions of the same table:
+          <p> <code>INSERT /*+ APPEND_VALUES */ INTO T1 partition (<strong>P1</strong>) (...) VALUES( ... )</code>  </p> 
+          <p> <code>INSERT /*+ APPEND_VALUES */ INTO T1 partition (<strong>P2</strong>)  (...)  VALUES( ... )</code> <strong> --> OK </strong>  </p> 
+          </p> 
+            
+          <div class="alert alert-warning"> 
+            Using hardcoded values without explicitely setting partition, will <strong>NOT</strong> make it partition aware: 
+          <p> <code>INSERT /*+ APPEND_VALUES */ INTO T1 ( P_KEY, ...) VALUES( 1, ... )</code>  </p> 
+          <p> <code>INSERT /*+ APPEND_VALUES */ INTO T1 ( P_KEY, ...) VALUES( 2, ... )</code>  </p> <strong NOK, still table level lock</strong>
+          </div>
+
+          </p>
+
+
+          <!-- <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p> -->
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- <script src="https://code.jquery.com/jquery.js"></script> -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
