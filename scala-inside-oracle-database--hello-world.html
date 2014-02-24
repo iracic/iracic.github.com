@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Igor & Sons </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+
+    <meta http-equiv="refresh" content="5" /> 
+
+  <style type="text/css" >
+    /* FIX NAVBAR HIDING TOP OF THE TEXT */
+    body { padding-top: 40px; }
+    @media screen and (max-width: 768px) {
+      body { padding-top: 0px; }
+    }
+  </style>
+
+  </head>
+  <body>
+
+
+   <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Igor & Sons</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Notes</a></li>
+            <!-- <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div> 
+
+  <div class="container"   >
+
+      <!-- 1st row -->
+      <div class="row" style="padding-top:25px;">
+        <div class="col-lg-12">
+        <ol class="breadcrumb"> 
+                <li><a href="#">Home</a></li> </a></li> 
+                <li><a href="/">Notes</a></li> </a></li> 
+                <li class="active"> Scala inside Oracle database: Hello World </li> </ol> 
+        </div>
+      </div>
+      <!-- 1st row -->
+      <div class="row">
+        <div class="col-lg-12">
+          <h2>Scala inside Oracle database: Hello World </h2>
+          <p> 
+          <button style="padding-left:10px" class="btn btn-info">
+            <span class=""> oracle </span> 
+          </button>
+
+         <!--  <button style="padding-left:10px" class="btn btn-info">
+            <span class=""> jdbc </span> 
+          --> </button>
+
+          <button style="padding-left:10px" class="btn btn-info">
+            <span class=""> scala </span> 
+          </button>
+
+<div> <!-- CONTENT -->
+<ul>
+        <li><a href="#short-intro"> Short intro </a></li>
+        <li><a href="#download-and-prepare"> Download and prepare </a></li>
+        <li><a href="#upload-scala-library"> Upload Scala library </a></li>
+        <li><a href="#write-scala-example"> Write Scala example </a></li>
+        <li><a href="#compile-and-load"> Compile and load </a></li>
+        <li><a href="#publish">Publish</a></li>
+        <li><a href="#call-function"> Call stored function </a></li>
+        <li><a href="#bonus"> Bonus: Akka example </a></li>
+        <ul>
+        <li><a href="#load-akka-jars"> Loading Akka jars </a></li>
+        <li><a href="#create-source-akka"> Create source file(s) </a></li>
+        <li><a href="#add-akka-jars"> Add Akka jars in classpath  </a></li>
+        <li><a href="#load-example-akka"> Load example files </a></li>
+        <li><a href="#publish-akka"> Publish </a></li>
+<li><a href="#grant-akka"> Grant permissions </a></li>
+<li><a href="#run-example-akka"> Run Akka example </a></li>
+</ul>
+</ul>
+</div>
+
+
+		<div id="short-intro">
+        <h3  class="margin-top:250px;"> Short intro </h3>
+
+        <p>
+        Let's write Oracle stored procedure (or function) in Scala. 
+        </p>
+
+        <p>
+        Classical ways to resolve problems with Oracle database are:
+        <ul>
+          <li>SQL</li>
+          <li>PL/SQL</li>
+          <li>Java <i>&lt;= We are here</i></li>
+          <li>C</li>
+        </ul>
+        </p>
+
+        <p>Scala is not natively supported by Oracle. 
+        <br> But it is possible to make it work pretending it is just some Java library. 
+        </p>
+
+        </div>
+
+
+        <div id="download-and-prepare">
+        <h3> Download and prepare </h3>
+        <p>
+        Ingredients used: 
+        <ul>
+          <li> Oracle database 12.1</li>
+          <li> Scala 2.10.2 </li>
+          <li> sbt 0.13 (optional) </li>
+          <li> Akka distribution 2.2.1 (optional) </li>
+        </ul>
+        </p>
+        </div>
+
+        <div id="upload-scala-library"> 
+        <h3 > Upload Scala library </h3>
+
+        Upload <code>$SCALA_HOME/lib/scala-library.jar</code> in Oracle database: 
+
+        <p>
+        <code>
+        	loadjava -user <i>user/pwd@oradb</i> \<br>
+        	 -resolve -resolver "((* <i>user</i> )(* public)(* -))" \<br> -verbose \<br>
+        	 <i> $SCALA_HOME/lib/scala-library.jar </i>
+        </code>
+        </p>
+
+        <div class="alert alert-warning"> Check there are no errors at the end of load and verify status inside database: <code>VALID</code> status: <code>select object_type,status, count(*) from user_objects <br> group by object_type, status <br> order by 1,2; </code> 
+
+        </div>
+
+        </div>
+
+
+        <div id="write-scala-example"> 
+        <h3> Write Scala example </h3>
+
+        <p>
+        	Using text editor:
+
+        	<pre>
+object HelloWorld {
+  def sayHello( p :String ) = s"Hi $p. I am Scala, hidden inside Oracle database." 
+}        	</pre>
+        	
+        	Save as <code>HelloWorld.scala</code>.
+        </p>
+        </div>
+
+
+        <div id="compile-and-load"> 
+        <h3 > Compile and load </h3>
+
+        <p>
+        You can use <code>scalac</code> to compile. Another alternative is to use <code>sbt</code>: </p>
+
+        <pre>sbt package</pre>
+
+        That will create jar file. Note the name and path. 
+
+        <br> And load the same way you did before: 
+
+        <p>
+        <code>
+        	loadjava -user <i>user/pwd@oradb</i> \<br>
+        	 -resolve -resolver "((* <i>user</i> )(* public)(* -))" \<br> -verbose \<br>
+        	 <i> myFile.jar </i>
+        </code>
+        </p>
+
+        <div class="alert alert-warning"> Check again that everything is OK by looking at <code>user_objects.status</code>
+        </div>
+
+        </div>
+
+
+        <div id="publish">
+        <h3 >Publish</h3>
+        Now it is the time to create PL/SQL wrapper: 
+        <pre>create or replace function helloFn( p varchar2 )
+return varchar2
+as
+  language java
+    name 'HelloWorld.sayHello( java.lang.String ) returns String';
+/
+show errors
+</pre>
+
+		</div>
+
+		<div id="call-function"> 
+		<h3 > Call stored function </h3>
+		<p> Created and published function is available as function written in Java or PL/SQL. Let's test it: 
+		<pre>No errors.
+SQL> 
+SQL> select helloFn( 'World wide web') from dual; 
+
+HELLOFN('WORLDWIDEWEB')
+----------------------------------------------------------------
+Hi World wide web. I am Scala, hidden inside Oracle database.
+
+</pre> 
+		</p>
+That's it.
+
+		</div>
+
+
+		<div id="bonus"> 
+	<h2 > Bonus: Akka example </h2>
+	</div>
+
+	Let's try to run local job using Akka actors. 
+	<p> We will give numbers range and number of slaves to master actor. 
+	And wait for result. Master will create slave actors, give them tasks and once everything back, reply back the answer.   
+
+
+	<div id="load-akka-jars"> 
+	<h3 > Loading Akka jars </h3>
+	<p> Need to load Akka jars with same method we have seen before:
+
+	<ul>
+		<li> Load config-1.0.2.jar</li>
+		<li> Load akka-actor_2.10-2.2.1.jar</li>
+	</ul>
+	</p>
+	</div>
+
+	<div id="create-source-akka"> 
+	<h3 > Create source file(s) </h3>
+
+	<div>
+	<pre>
+package ch5
+
+import scala.concurrent.Future
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
+
+import akka.actor.Actor
+import akka.actor.ActorRef
+import akka.actor.ActorSystem
+import akka.actor.Props
+import akka.actor.actorRef2Scala
+import akka.pattern.ask
+import akka.util.Timeout
+
+
+sealed trait Msg
+case class Request( n1 :Long, n2 :Long ) extends Msg
+case class RequestForMaster( n1 :Long, n2 :Long, nSlaves :Int ) extends Msg
+case class Reply ( n1 :Long, n2 :Long, result :Long ) extends Msg
+
+
+object Adder {
+  def calc( n1 :Long, n2 :Long ) :Long = {
+                
+    var sum = 0L //BigInt( "0" )
+    var current = n1
+    while( current <= n2 ) {
+      sum += current
+      current += 1
+    }
+    sum
+  }
+}
+
+class Slave extends Actor {
+        
+  override def receive = {
+    case Request( n1, n2 ) => 
+      println( "Slave received n: " + n1 +" ", n2 );
+      val sum = Adder.calc( n1, n2 )
+      sender ! Reply( n1, n2, sum )   
+  }
+}
+
+
+class Master extends Actor {
+
+  def receive = {
+    case r @ RequestForMaster( n1, n2, nSlaves ) =>
+                  
+      implicit val ctx = context.dispatcher
+                  
+      println( "master received: " + r )
+      println( "number of slaves: " + nSlaves ) 
+
+      val ranges = utils.RangeUtils.ranges( n1, n2, nSlaves )
+            
+      implicit val timeout :Timeout = new Timeout( 10 .minutes) 
+                  
+      val slaves = new Array[ActorRef](nSlaves)
+        for( i <- 0 until nSlaves )
+          slaves(i) = context .actorOf( Props[Slave], name = "slave-"+i );
+                  
+          val result_inFuture = new Array[Future[Any]](nSlaves)
+          for( i <- 0 until nSlaves )
+            result_inFuture(i) = slaves(i) ? Request( ranges(i)._1, ranges(i)._2 ) 
+                  
+            val result_inFuture_listToOne = Future.sequence( result_inFuture.toList )
+                  
+            val result_01 = Await.result( result_inFuture_listToOne, 10 .minutes  )
+            println( "\n\n Master -- Received back: " + ( result_01 mkString ( "\n", "\n", "" ) ) )
+                  
+            sender ! result_01 
+ 
+  }
+        
+}
+
+
+object AkkaTest extends App {
+
+   override def main( args : Array[String] ) = 
+      if( args.isEmpty ) 
+        runCalc( 1, 10000000, 4 )
+      else
+        runCalc( args(0) .toLong, args(1) .toLong, args(2) .toInt )
+
+   def runCalc( n1 :Long, n2 :Long, nSlaves :Int) = {
+
+      implicit val timeout :Timeout = new Timeout( 10 .minutes )
+
+      val system = ActorSystem( "system1" ); 
+      val master = system.actorOf( Props( new Master ), name = "forwarder--2" );
+
+      val result_01 = master ? RequestForMaster( n1, n2, nSlaves )
+                 
+      println( "Active threads: " + Thread.activeCount )
+      
+      val result_02 = Await.result( result_01, 10 .minute )
+
+      val aggrResult = ( result_02.asInstanceOf[List[Reply]] .map ( _.result ) ) .sum 
+      println( "Aggregated result: " + aggrResult )
+
+
+      println( "Active threads: " + Thread.activeCount )
+      println( "System shutdown" )
+      system.shutdown
+      println( "Active threads: " + Thread.activeCount )
+      
+      aggrResult
+
+  }
+   
+} 
+
+</pre>
+
+In RangeUtils.scala: 
+<pre>
+package utils
+
+object RangeUtils extends App {
+  import collection.mutable._
+
+  def ranges( n1 :Long, n2 :Long, nTh :Int ) = {
+
+    println( "\n\n-----------------------------------------" )
+    println( s" $n1 -> $n2 ($nTh)")
+
+
+    val nPerTh :Long = (n2 -n1 +1) / nTh 
+
+    def range( n1 :Long, n2 :Long, nPerTh :Long ) = {
+      val o1 = n1 
+      val o2 = min( n2, n1 + nPerTh -1 )
+      (o1,o2)
+    }
+
+    def min( n1 :Long, n2 :Long ) = if( n1 < n2 ) n1 else n2
+
+    var ranges = ListBuffer[(Long,Long)] ()
+    var p1 =n1
+    while( p1 < n2 ) {
+      ranges += range( p1, n2, nPerTh )
+      p1 = p1 + nPerTh
+    }
+
+    val r = ranges .toList
+
+    val r2 = if( r .length == nTh )
+      r
+    else
+      mergeLast( r ) 
+
+    r2
+  }
+
+
+  /*
+   * List((1,2), (3,4), (5,6), (7,8)) => List((1,2), (3,4), (5,8))
+   */
+  def mergeLast( l : List[(Long,Long)] ) : List[(Long,Long)] = {
+    l match {
+      case Nil => Nil
+      case List(x) => List(x)
+      case x :: y :: Nil => List( ( x._1, y._2 ) )
+      case x :: y :: rest => x :: mergeLast( y :: rest )
+      case x => println( "Not matched: "+x ); Nil
+    }
+  }
+}</pre>
+	</div>
+
+	</div>
+
+
+	<div id="add-akka-jars">
+	<h3 > Add Akka jars in classpath</h3>
+	Use <code>akka-actor_2.10-2.2.1.jar</code> and <code>config-1.0.2.jar</code>. If using <code>sbt</code>, you can add symlinks in <code>lib</code> directory. 
+	</div>
+
+	<div id="load-example-akka">
+	<h3 > Load example files </h3>
+	The same way load akka example files. 
+	</div>
+
+	<div id="publish-akka">
+	<h3 > Publish </h3>
+	<pre>create or replace function akkaCalc( n1 number, n2 number, nSlaves number )
+return number
+as
+  language java
+  name 'ch5.AkkaTest.runCalc( long, long, int ) returns long';
+/
+show errors
+
+create or replace function adderCalc( n1 number, n2 number ) 
+return number
+as
+  language java
+  name 'ch5.Adder.calc( long, long ) returns long';
+/
+show errors </pre>
+	</div>
+
+	<div id="grant-akka"> 
+<h3 > Grant permissions </h3>
+<pre>
+exec dbms_java.grant_permission( 'SCALA', 'SYS:java.lang.RuntimePermission', 'getenv.AKKA_HOME', '' )
+exec dbms_java.grant_permission( 'SCALA', 'SYS:java.lang.RuntimePermission', 'getClassLoader', '' )
+exec dbms_java.grant_permission( 'SCALA', 'SYS:java.util.PropertyPermission', '*', 'read,write' )
+exec dbms_java.grant_permission( 'SCALA', 'SYS:java.lang.RuntimePermission', 'setContextClassLoader', '' )
+exec dbms_java.grant_permission( 'SCALA', 'SYS:java.lang.RuntimePermission', 'accessClassInPackage.sun.misc', '' )
+exec dbms_java.grant_permission( 'SCALA', 'SYS:java.lang.RuntimePermission', 'accessDeclaredMembers', ''  )
+exec dbms_java.grant_permission( 'SCALA', 'SYS:java.lang.reflect.ReflectPermission', 'suppressAccessChecks', '' )
+exec dbms_java.grant_permission( 'SCALA', 'SYS:java.lang.RuntimePermission', 'getClassLoader', '' )
+commit;
+</pre>
+	</div>
+
+	<div id="run-example-akka"> 
+<h3 > Run Akka example </h3>
+
+<pre>
+SQL> set serveroutput on size unlimited
+SQL> exec dbms_java.set_output( 1000000 )
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.00
+
+SQL> var n number
+SQL> exec :n := akkaCalc( 1, 4e9, 4 )
+Active threads: 7
+master received: RequestForMaster(1,4000000000,4)
+number of slaves: 4
+-----------------------------------------
+1 -> 4000000000 (4)
+(Slave received n: 1 ,1000000000)
+(Slave received n: 1000000001 ,2000000000)
+(Slave received n: 2000000001 ,3000000000)
+(Slave received n: 3000000001 ,4000000000)
+Master -- Received back:
+Reply(1,1000000000,500000000500000000)
+Reply(1000000001,2000000000,1500000000500000000)
+Reply(2000000001,3000000000,2500000000500000000)
+Reply(3000000001,4000000000,3500000000500000000)
+Aggregated result: 8000000002000000000
+Active threads: 10
+System shutdown
+Active threads: 10
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:05.62
+
+
+</pre>
+
+
+<div class="alert alert-warning"> Due to threading implementation in Oracle JVM, do not expect to get performance boost when running jobs in parallel. Hopefuly that is something that will be changed in the future (wishful thinking here...) 
+</div>
+
+	</div>
+
+          <!-- <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p> -->
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- <script src="https://code.jquery.com/jquery.js"></script> -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
