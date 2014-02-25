@@ -178,7 +178,7 @@
 
         	<pre>
 object HelloWorld {
-  def sayHello( p :String ) = s"Hi $p. I am Scala, hidden inside Oracle database." 
+  def sayHello( p :String ) = s"Hi $p. I am Scala function, hidden inside Oracle database." 
 }        	</pre>
         	
         	Save as <code>HelloWorld.scala</code>.
@@ -234,8 +234,8 @@ SQL>
 SQL> select helloFn( 'World wide web') from dual; 
 
 HELLOFN('WORLDWIDEWEB')
-----------------------------------------------------------------
-Hi World wide web. I am Scala, hidden inside Oracle database.
+------------------------------------------------------------------------
+Hi World wide web. I am Scala function, hidden inside Oracle database.
 
 </pre> 
 		</p>
@@ -524,6 +524,15 @@ Active threads: 10
 PL/SQL procedure successfully completed.
 
 Elapsed: 00:00:05.62
+
+
+SQL> column n format 999,999,999,999,999,999,999,999
+SQL> print n
+
+                               N
+--------------------------------
+       8,000,000,002,000,000,000
+
 
 
 </pre>
