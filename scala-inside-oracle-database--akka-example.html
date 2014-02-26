@@ -92,6 +92,7 @@
 
 <div> <!-- CONTENT -->
 <ul>
+        <li><a href="#download-and-prepare"> Download and prepare </a></li>
         <li><a href="#load-akka-jars"> Loading Akka jars </a></li>
         <li><a href="#create-source-akka"> Create source file(s) </a></li>
         <li><a href="#add-akka-jars"> Add Akka jars in classpath  </a></li>
@@ -111,6 +112,23 @@
 	<p> We will give numbers range and number of slaves to master actor. 
 	And wait for result. Master will create slave actors, give them tasks and once everything back, reply back the answer.   
 
+
+<div class="alert alert-warning"><h4> WARNING: Due to threading implementation in Oracle JVM, do <strong>not</strong> expect to get performance improvement when running multiple threads. Hopefuly that is something that will be changed in the future (wishful thinking here...) </h4>
+</div>
+
+  <div id="download-and-prepare"> 
+
+        <h3> Download and prepare </h3>
+        <p>
+        Ingredients used: 
+        <ul>
+          <li> Oracle database 12.1</li>
+          <li> Scala 2.10.2 </li>
+          <li> sbt 0.13 (optional) </li>
+          <li> Akka distribution 2.2.1 </li>
+        </ul>
+        </p>
+        </div>
 
 	<div id="load-akka-jars"> 
 	<h3 > Loading Akka jars </h3>
@@ -396,9 +414,6 @@ SQL> print n
 
 </pre>
 
-
-<div class="alert alert-warning"> Due to threading implementation in Oracle JVM, do not expect to get performance boost when running jobs in parallel. Hopefuly that is something that will be changed in the future (wishful thinking here...) 
-</div>
 
 	</div>
 

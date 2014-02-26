@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Igor & Sons </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+
+    <!-- <meta http-equiv="refresh" content="5" />  -->
+
+  <style type="text/css" >
+    /* FIX NAVBAR HIDING TOP OF THE TEXT */
+    /*body { padding-top: 40px; }  -- PROBLEM WITH STATIC NAVBAR AND HREF*/
+    @media screen and (max-width: 768px) {
+      body { padding-top: 0px; }
+    }
+  </style>
+
+<!-- google analytics -->
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-48387297-1', 'igorandsons.com');
+  ga('send', 'pageview');
+
+  </script>
+
+  </head>
+  <body>
+
+
+   <div class="navbar navbar-inverse " role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Igor & Sons</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/">Notes</a></li>
+            <!-- <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            -->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div> 
+
+  <div class="container"   >
+
+
+      <!-- 1st row -->
+      <div class="row" style="padding-top:25px;">
+        <div class="col-lg-12">
+        <ol class="breadcrumb"> 
+                <li><a href="/">Home</a></li> </a></li> 
+                <li><a href="/">Notes</a></li> </a></li> 
+                <li class="active"> Scala inside Oracle database: Why Scala </li> </ol> 
+        </div>
+      </div>
+      <!-- 1st row -->
+      <div class="row">
+        <div class="col-lg-12">
+          <h2>Scala inside Oracle database: Why Scala </h2>
+          <p> 
+<!--           <button style="padding-left:10px" class="btn btn-info">
+            <span class=""> oracle </span> 
+          </button>
+
+         <button style="padding-left:10px" class="btn btn-info">
+            <span class=""> jdbc </span> 
+          </button>
+ -->
+          <button style="padding-left:10px" class="btn btn-info">
+            <span class=""> scala </span> 
+          </button>
+		  
+		  
+
+
+
+
+
+		  <div> <!-- CONTENT -->
+        <ul>
+          <li><a href="#low-hanging-fruits"> Low hanging fruits </a></li>
+          <li><a href="#sql-like-operations"> SQL-like operations </a></li>
+            <ul>
+              <li><a href="#filtering"> Filtering </a> </li>
+              <li><a href="#filter-and-map"> Filter and map </a> </li>
+              <li><a href="#for-loop-map"> For-loop as map </a> </li>
+              <li><a href="#group-by"> Group by </a> </li>
+              <li><a href="#group-by-having"> Group by + Having </a> </li>
+              <li><a href="#group-by-aggregate"> Group by + aggregate function </a> </li>
+              <li><a href="#some-map-examples"> Some Map examples </a> </li>
+            </ul >
+
+          <li><a href="#traits"> Traits </a></li>
+          <li><a href="#pattern-matching"> Pattern matching </a></li>
+          <ul>
+            <li><a href="#match-with-constants"> Match with constants </a> </li>
+            <li><a href="#match-with-list"> Match with list </a> </li>
+            <li><a href="#match-and-get-elements"> Match and get elements</a> </li>
+            <li><a href="#match-case-classes"> Match using case classes </a> </li>
+          </ul>
+          <li><a href="#currying"> Currying </a> </li>
+          <li><a href="#note-about-functions"> Note about functions </a> </li>
+        </ul>
+      </div>
+
+	<p> Stored procedures can be written with PL/SQL and Java. <br>As an another alternative, what Scala brings to table ?  
+  </p>
+
+  <h3 id="low-hanging-fruits"> Low hanging fruits </h3>
+  These are examples of quick wins when going from Java to Scala: 
+  <p>
+    <ul> 
+    <li> Less code to write </li>
+    <li> For Java developers, productivity from day 1 </li>
+    <li> Excellent interoperability with Java libraries </li>
+    <li> Flexibility (imports, nesting objects, functions as objects, local functions, function named arguments, function default values, ...)</li>
+
+    <li> Traits: easier class composition, stackable composition</li>
+    <li> Pattern matching</li>
+    <li> Option, Tuple, Either, ...
+    <li>Currying </li>
+      <li> <i>[... that can continue ...] </i> </li>
+    </ul>
+
+    <h3> More power </h3>
+    <ul>
+      <li> Built in XML support </li>
+      <li> Parser combinators </li>
+      <li> Possibility to build custom collection classes </li>
+      <!-- <li> Akka for distributed processing </li> -->
+      <li> <i> ... </i> </li>
+    </ul>
+  </p>
+
+  <div>
+    Let's see practical examples
+  </div>
+
+  <h3 id="collections-examples"> Collections examples </h4>
+
+  <h4> Thinking in sets </h4>
+  <div class="alert alert-info"> Remember "thinking in sets" mantra from SQL world ? <p>If so, you will see a big difference comparing Scala collections to Java collections. </p> </div>
+
+  <p>
+  In Java world, tipicaly, you create new collection by traversing old collection and manually add elements to new one. <br> In Scala, usually you apply operations/functions to get new collection. 
+  </p>
+
+  <h4> Example data </h4>
+  Let's say we have Person class with this structure: 
+  <pre>
+case class Person( name :String, var age :Int, s :String ) 
+// case class == hash, no "new", public vals, readable toString, pattern match extractor
+</pre>
+And have in memory this list: 
+<pre>
+val list = List( 
+            Person( "Jane", 22, "F" ), 
+            Person( "Marie", 35, "F" ),
+            Person( "Jenifer", 40, "F" ), 
+            Person( "Leonardo", 35, "M" ),
+            Person( name = "Jack", s = "M", age = 55 ), // params by name
+            Person( "John", 55, "M" )
+          )
+</pre>
+
+
+<h3 id="sql-like-operations"> SQL-like operations </h3> 
+
+<h4 id="filtering"> Filtering </h4>
+<pre>
+list .filter( _.s == "F" )
+//  >> List(Person(Jane,22,F), Person(Marie,35,F), Person(Jenifer,40,F))
+</pre>
+
+Similar to SQL: <code>select * from PERSONS where S = 'F' </code>
+
+<h4 id="filter-and-map"> Filter and map </h4>
+
+<pre>
+list .filter( x => x.s == "F" && x.age > 25 ) .map( _.name ) 
+// >> List(Marie, Jenifer)
+</pre>
+Similar to: <code>select NAME from PERSONS where S = 'F' and AGE > 25 </code>
+
+<h4 id="for-loop-map"> For-loop as map </h4>
+<pre>( for( p1 <- list.sortBy( _.age) if p1.s == "F" ) yield ( s"${p1.name} is ${p1.age}" )) mkString "\n"
+// >> Jane is 22
+// >> Marie is 35
+// >> Jenifer is 40
+</pre>
+<code>select NAME ||' is '|| AGE from PERSONS where s = 'F' </code>
+
+<h4 id="group-by"> Group by </h4>
+<pre>
+list.groupBy( _.age )
+// >> Map(35 -> List(Person(Marie,35,F), Person(Leonardo,35,M)), 55 -> List(Person(Jack,55,M), Person(John,55,M)), 40 -> List(Person(Jenifer,40,F)), 22 -> List(Person(Jane,22,F)))
+</pre> 
+SQL (similar): <code>select AGE, LISTAGG( NAME, ',' ) within group ( order by name ) from PERSONS group by AGE;</code>
+
+<h4 id="group-by-having"> Group by + Having </h4>
+<pre>list.groupBy( _.age ).filter( _._2.size > 1 ) 
+// >> Map(35 -> List(Person(Marie,35,F), Person(Leonardo,35,M)), 55 -> List(Person(Jack,55,M), Person(John,55,M)))
+</pre><code>select count(*), name, age, s from PERSONS group by age having count(*) > 1</code> 
+
+<h4 id="group-by-aggregate"> Group by + aggregate function </h4> 
+<pre>
+list.groupBy( _.age ).mapValues( l => (l map ( _.name )).sorted.head )
+// >> Map(35 -> Leonardo, 55 -> Jack, 40 -> Jenifer, 22 -> Jane)
+</pre>
+<code>select AGE, min(NAME) from PERSONS group by AGE</code>
+
+
+<h4 id="some-map-examples"> Some Map examples </h4>
+<pre>
+val m = Map( "F" -> "feminin", "M" -> "masculin" )
+
+// UNION ALL, replace with 2nd map
+m ++ Map( "M" -> "middle office" )
+// >> Map(F -> feminin, M -> middle office)
+
+m .filterKeys( _ == "F" )
+// >> Map(F -> feminin)
+
+m .filter( _._2 contains ("asc") )
+// >> Map(M -> masculin)
+</pre>
+
+
+
+<h3 id="traits"> Traits </h3>
+
+Let's see how to compose avec traits: 
+<pre>
+trait T1 {
+  def f1( x :Int ) = x
+}
+  
+trait T2 extends T1 {
+  override def f1( x:Int ) = super.f1(x) +1
+}
+
+trait T3 extends T1 {
+  override def f1( x:Int ) = 5* super.f1(x)
+}
+</pre>
+
+This can be some base class: 
+<pre>
+  class C0 {
+    def anotherFn = "ABC"
+  }
+</pre>
+
+New instance can be created even without explicitely creating class: 
+<pre>
+val O1 = new C0 with T1
+println( O1.f1(1) ) // 1
+
+val O2 = new C0 with T1 with T2
+println( O2.f1(1) ) // 2
+</pre>
+
+Here we see stackable composition. 
+"super" corresponds to right element in trait composition: 
+
+<pre>val O3 = new C0 with T1 with T2 with T3
+println( O3.f1(1) ) // <bold>10 !!</bold>
+</pre>
+
+
+<h3 id="pattern-matching"> Pattern matching </h3>
+
+Another way to handle branch logic.
+
+<h4 id="match-with-constants"> Match with constants </h4>
+
+<pre>
+("ABC", 2 ) match {
+  case ("ABC", _ ) => "It's this one" // "ABC" as 1st, 2nd not important
+  case _ => "Not found" // "WHEN OTHERS THEN"
+}
+</pre>
+
+<h4 id="match-with-list"> Match with list </h4>
+<pre>
+val e = List( "John", "Jane", "Jack" ) match {
+  case  _ :: "Jane" :: _ => "It's this one" // Pick the list if Jane is 2nd element 
+  case _ => "Not found" 
+}
+</pre>
+
+<h4 id="match-and-get-elements"> Match and get elements </h4>
+<pre>
+(1,2,3) match { 
+  case ( _, _, a @ _ ) => println( s"a= $a" ) 
+  case _ => println( "SOMETHING ELSE" )
+}
+// a= 3
+</pre>
+
+
+<h4 id="match-case-classes"> Match using case classes </h4>
+<pre>
+trait Msg
+case class OrdinaryMessage( s :String ) extends Msg
+case class VeryImportantMessage( s: String ) extends Msg
+
+def fnToGetMessages :Msg = VeryImportantMessage( "You have a coffe with Jane" )
+
+val e = fnToGetMessages match {
+  case OrdinaryMessage( s ) => "Walk and tell that: " + s
+  case VeryImportantMessage( s ) => "Fly to tell: " + s 
+}
+// >> e: Fly to tell: You have a coffe with Jane
+</pre>
+
+
+<h3 id="currying"> Currying</h3>
+"Invent" new language construct
+<pre>
+def timing( f : => Unit ) {
+  val t1 = System.currentTimeMillis
+  f
+  val t2 = System.currentTimeMillis
+  println( "Exec time: " + (t2-t1) +" ms. " )
+}
+</pre>
+It can then be called as
+<pre>
+timing {
+  var s=0L
+  for( i <- 1 to 10000000 ) {
+    s += i
+  }
+  println( "s: "+s )
+}
+</pre>
+
+And provides output as:
+<pre>
+s: 50000005000000
+Exec time: 142 ms.
+</pre>
+
+
+<h3 id="note-about-functions"> Note about functions </h3>
+We will just mention here that Scala embraces also functional programming paradigms (pure functions, higher order functions, lazy evalutions, recursions, tail recursion... ).  
+
+
+Just shortly here. 
+<pre>
+def f1 = (x :Int) => x+1
+def f2 = (x :Int) => 3*x
+def f = f1 compose f2 // reversed order: f(2) == 7 
+</pre>
+
+Immutable functions - do not change original content:
+<pre>
+val l = Set( "a", "b" )
+
+// Apply function
+l map ( ">"+ _ +"<" ) 
+</pre>
+Original list is intact:
+<pre>
+println( l ) 
+// Set(a, b)
+</pre>
+
+
+Some more examples: 
+<pre>
+List(2,3,4) .reduce( (acc,v) => acc *v )
+// >> e: 24
+
+List( 2,3,4 ) .foldLeft( "X" ) ( (x :String,y :Int) => "[" + x +","+ y +"]" )
+// >> e: [[[X2]3]4]
+</pre>
+It is a lot more that could be set about functions. It was just one <i>avant-gout</i>...
+
+
+
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'igor-and-sons'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+
+    
+
+    </div><!-- /.container -->
+
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!-- <script src="https://code.jquery.com/jquery.js"></script> -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+	
+	
+	
+    
+
+  </body>
+</html>
