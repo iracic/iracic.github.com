@@ -125,8 +125,13 @@
         </ul>
       </div>
 
-	<p> Stored procedures can be written with PL/SQL and Java. <br>As an another alternative, what Scala brings to table ?  
-  </p>
+	<p> Stored procedures can be written with PL/SQL and Java. <br>As an another alternative, what Scala brings to table ?  </p>
+
+        <div class="alert alert-warning"> 
+          This post was written with experience using Java 6. 
+          <br> New Java 8 narrows the gap.
+              And interestingly, some features seem influenced by Scala.
+        </div>
 
   <h3 id="low-hanging-fruits"> Low hanging fruits </h3>
   These are examples of quick wins when going from Java to Scala: 
@@ -253,7 +258,7 @@ m .filter( _._2 contains ("asc") )
 
 <h3 id="traits"> Traits </h3>
 
-Let's see how to compose avec traits: 
+Let's see how to compose with traits: 
 <pre>
 trait T1 {
   def f1( x :Int ) = x
@@ -400,7 +405,7 @@ List(2,3,4) .reduce( (acc,v) => acc *v )
 List( 2,3,4 ) .foldLeft( "X" ) ( (x :String,y :Int) => "[" + x +","+ y +"]" )
 // >> e: [[[X2]3]4]
 </pre>
-It is a lot more that could be set about functions. It was just one <i>avant-gout</i>...
+It is a lot more that could be said about functions. It was just one <i>avant-gout</i>...
 
 
 
