@@ -2,10 +2,12 @@
 <html>
   <head>
     <title>Igor & Sons </title>
-    <meta http-equiv="refresh" content="5">
+    <!-- <meta http-equiv="refresh" content="5"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel=icon href=favicon.png sizes="16x16" type="image/png">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -17,7 +19,7 @@
 
     <!-- <meta http-equiv="refresh" content="5" />  -->
 
-  <style type="text/css" >
+  <style type="text/css">
     /* FIX NAVBAR HIDING TOP OF THE TEXT */
     /*body { padding-top: 40px; }  -- PROBLEM WITH STATIC NAVBAR AND HREF*/
     @media screen and (max-width: 768px) {
@@ -69,16 +71,17 @@
       <!-- 1st row -->
       <div class="row" style="padding-top:25px;">
         <div class="col-lg-12">
-        <ol class="breadcrumb"> 
-                <li><a href="/">Home</a></li> </a></li> 
-                <li><a href="/">Notes</a></li> </a></li> 
-                <li class="active"> Scala inside Oracle database: Remote debug using Scala IDE </li> </ol> 
+          <ol class="breadcrumb"> 
+            <li><a href="/">Home</a></li>  
+            <li><a href="/">Notes</a></li>  
+            <li class="active"> Scala inside Oracle database: Remote debug with Scala IDE </li> 
+          </ol> 
         </div>
       </div>
       <!-- 1st row -->
       <div class="row">
         <div class="col-lg-12">
-          <h2>Scala inside Oracle database: Remote debug using Scala IDE </h2>
+          <h1>Scala inside Oracle database: <br> Remote debug with Scala IDE </h1>
           <p> 
           <button style="padding-left:10px" class="btn btn-info">
             <span class=""> oracle </span> 
@@ -86,7 +89,7 @@
 
          <!--  <button style="padding-left:10px" class="btn btn-info">
             <span class=""> jdbc </span> 
-          --> </button>
+          </button> --> 
 
           <button style="padding-left:10px" class="btn btn-info">
             <span class=""> scala </span> 
@@ -95,139 +98,207 @@
 <div> <!-- CONTENT -->
 <ul>
         <li><a href="#short-intro"> Short intro </a></li>
-        <li><a href="#prepare-project"> Prepare Eclipse project </a></li>
-        <li><a href="#upload-code"> Upload created code </a></li>
-        <li><a href="#publish"> Publish function </a></li>
-		
-        <li><a href="#grant-debug"> Grant debug </a></li>
-        <li><a href="#compile-and-load"> Prepare and start debugging session on Eclipse side </a></li>
-        <li><a href="#enable-oracle-session">Enable debugging on Oracle session side</a></li>
-        <li><a href="#call-function"> Call stored function </a></li>
-		<li><a href="#few-notes"> Few notes </a></li>
+        
+        <li> <a href="#preparing-example"> Preparing example: create Eclipse Scala project </a>
+            <ul>
+              <li> <a href="#sbt-project-creation">Sbt project creation</a> </li>
+              <li> <a href="#create-scala-source">Create Scala source</a> </li>
+              <li> <a href="#compile-and-load-into-database"> Compile & load code into database </a></li>
+              <li> <a href="#plsql-wrapper">Create PL/SQL wrapper</a> </li>
+              <li> <a href="#create-eclipse-project-files">Create Eclipse project files</a> </li>
+              <li> <a href="#import-project-into-eclipse">Import project into Eclipse</a> </li>
+            </ul>
+        </li>
+		            
 
+        <li><a href="#grant-debug"> Grant debug to Oracle user</a></li>
+
+        <li> <a href="#start-debugging"> Start debugging </a> </li> 
+        <ul>
+          <li><a href="#prepare-debug-eclipse"> Prepare Eclipse side </a></li>
+          <li><a href="#prepare-debug-oracle">Enable debugging in Oracle session </a></li>
+          <li><a href="#call-function"> Call stored function </a></li>
+        </ul>
+		<li><a href="#some-notes"> Some notes </a>
+      <ul>
+        <li><a href="#scala-ide-maturity">Scala IDE state of the art </a></li>
+        <li><a href="#error--eclipse-not-started">Error when debugging not started on Eclipse side</a></li>
+        <li><a href="#error--no-grant-given">Error when no debug grant is given </a> </li>
+      </ul>
+    </li>
 </ul>
-</div>
+</div>  <!-- END CONTENT -->
+
 
 
 		<div id="short-intro">
-        <h3  class="margin-top:250px;"> Short intro </h3>
+        <h2  class="margin-top:250px;"> Short intro </h2>
 
+        <p> It is possible to debug Scala function stored in Oracle database, using IDE. 
         <p>
-        Let's debug Oracle database function written in Scala. <br>
+        
 		We will use bundled Scala IDE (Eclipse with Scala plugin). 
-		<br>Of course, any other IDE with remote debugging support should work. 
-		<br>(Just please, do not use jdb... :-)  
+		<br> It should be better option than jdb... :-)  
 		<br><br>
 		Used <ul>
 			<li> sbt 0.13 (optional) </li>
 			<li> Scala IDE 3.0.4 </li>
-			<li> Oracle database 12c </li>
+			<li> Oracle database 12c (12.1.0.1)</li>
 			</ul>
         </p>
 
         </div>
 
+        <h2 id="preparing-example"> Preparing example: create Eclipse Scala project </h2>
+We will create sbt project and import it into Eclipse. 
 
-        <div id="prepare-project">
-        <h3> Prepare project </h3>
-We will create here Eclipse project by creating sbt project and importing it into Eclipse. 
-
-<div class="alert alert-info">
-Of course, for this example, sbt is not necessary. If you prefer, create project in Eclipse directly. 
+<div class="alert alert-info"> You can create Scala project inside Eclipse. <br>Very likely, sooner or later, you will switch to project creation outside of IDE. For reasons like automated actions, organizing module dependencies, IDE agnostic setup etc.  
 </div>
 
+
+  <h3 id="sbt-project-creation"> Sbt project creation </h3>
+
+  <p> Let's start with new directory:
+  <pre> mkdir debug-session && cd debug-session </pre>
+  and create project file <code>build.sbt</code>: 
+      
+      <pre>name := "Adder"
+
+version := "1.0.0"
+
+scalaVersion := "2.11.1" </pre>
+
+
+      <div class="alert alert-warning"> NOTE: Empty lines between commands in file build.sbt are mandatory.</div>
+      </p>
         </div>
 
-        <div id="upload-scala-library"> 
-        <h3 > Upload Scala library </h3>
+        <h3 id="create-scala-source"> Create Scala source </h3>
+        <pre>mkdir -p src/main/scala</pre>
+        and create file <code>src/main/scala/IntAdder.scala</code>: 
+        <pre>
+object IntAdder {
+  def addFromTo( n1 :Int, n2 :Int ) = {
+    var s=0L;
+    for (i <- n1 to n2)
+      s += i
+    s
+  }
+}</pre>
 
-        Upload <code>$SCALA_HOME/lib/scala-library.jar</code> in Oracle database: 
+    <h3 id="compile-and-load-into-database"> Compile & load code into database </h3>
+    <pre>sbt package 
+loadjava -user user/pwd@oradb \
+-resolve -resolver "((* user )(* public)(* -))" \
+-verbose \
+target/scala-2.11/adder_2.11-1.0.0.jar </pre>
+<div class="alert alert-warning"> We assume here you have already scala-library.jar loaded (Scala version 2.11). If you need more info about it, check <a href="scala-inside-oracle-database--hello-world.html#upload-scala-library"> getting started example</a>.
+</div>
 
-        <p>
-        <code>
-        	loadjava -user <i>user/pwd@oradb</i> \<br>
-        	 -resolve -resolver "((* <i>user</i> )(* public)(* -))" \<br> -verbose \<br>
-        	 <i> $SCALA_HOME/lib/scala-library.jar </i>
-        </code>
-        </p>
-
-        <div class="alert alert-warning"> Check there are no errors at the end of load and verify status inside database: <code>VALID</code> status: <br> <code>select object_type,status, count(*) from user_objects <br> group by object_type, status <br> order by 1,2; </code> 
-
-        </div>
-
-        </div>
-
-
-        <div id="write-scala-example"> 
-        <h3> Write Scala example </h3>
-
-        <p>
-        	Using text editor:
-
-        	<pre>
-object HelloWorld {
-  def sayHello( p :String ) = s"Hi $p. I am Scala function, hidden inside Oracle database." 
-}        	</pre>
-        	
-        	Save as <code>HelloWorld.scala</code>.
-        </p>
-        </div>
-
-
-        <div id="compile-and-load"> 
-        <h3 > Compile and load </h3>
-
-        <p>
-        You can use <code>scalac</code> to compile. Another alternative is to use <code>sbt</code>: </p>
-
-        <pre>sbt package</pre>
-
-        That will create jar file. Note the name and path. 
-
-        <br> And load the same way you did before: 
-
-        <p>
-        <code>
-        	loadjava -user <i>user/pwd@oradb</i> \<br>
-        	 -resolve -resolver "((* <i>user</i> )(* public)(* -))" \<br> -verbose \<br>
-        	 <i> myFile.jar </i>
-        </code>
-        </p>
-
-        <div class="alert alert-warning"> Check again that everything is OK by looking at <code>user_objects.status</code>
-        </div>
-
-        </div>
-
-
-        <div id="publish">
-        <h3 >Publish</h3>
-        Now it is the time to create PL/SQL wrapper: 
-        <pre>create or replace function helloFn( p varchar2 )
-return varchar2
+<h3 id="plsql-wrapper"> Create PL/SQL wrapper </h3>
+Execute from your Oracle session:
+<pre>create or replace function adder( n1 number, n2 number )
+return number
 as
   language java
-    name 'HelloWorld.sayHello( java.lang.String ) returns String';
-/
-show errors
+  name 'IntAdder.addFromTo( int, int) returns long';
+/</pre>
+
+      <h3 id="create-eclipse-project-files"> Create Eclipse project files </h3>
+
+
+    <pre> mkdir project</pre> Enable sbteclipse in our project with new file <code>project/plugins.sbt</code>: 
+    <pre> addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.5.0") </pre>
+
+
+      Generate project files:
+      <pre>sbt
+>eclipse execution-environment=JavaSE-1.6 with-javadoc=true with-source=true with-bundled-scala-containers=true
 </pre>
 
-		</div>
+      <h3 id="import-project-into-eclipse"> Import project into Eclipse </h3>
+      Run Eclipse and import project from menu: <code>File -> Import... -> General -> Existing Projects into Workspace </code>
 
-		<div id="call-function"> 
-		<h3 > Call stored function </h3>
-		<p> Created and published function is available as function written in Java or PL/SQL. Let's test it: 
-		<pre>No errors.
-SQL> 
-SQL> select helloFn( 'World wide web') from dual; 
+        <div id="upload-scala-library"> 
+        <h3  id="grant-debug"> Grant debug to Oracle user </h3>
+<pre>
+grant DEBUG ANY PROCEDURE to &&user;
+grant DEBUG CONNECT SESSION to &user;
 
-HELLOFN('WORLDWIDEWEB')
-------------------------------------------------------------------------
-Hi World wide web. I am Scala function, hidden inside Oracle database.
+REM
+REM You must add the jdwp privilege to the Access Control List (ACL) in the following way:
+REM
 
-</pre> 
-		</p>
-That's it.
+begin
+  DBMS_NETWORK_ACL_ADMIN.APPEND_HOST_ACE(
+    host => '<strong>localhost</strong>',
+    ace  => xs$ace_type(privilege_list => xs$name_list('jdwp'),
+                        principal_name => '&user',
+                        principal_type => xs_acl.ptype_db));
+end;
+/
+commit; </pre>
+
+<div class="alert alert-info"> Here used <strong>localhost</strong> as both Oracle database and Eclipse were run on same machine. </div>
+
+
+        </div>
+
+
+        <h2 id="start-debugging">Start debugging</h2>
+        To get debugging session we need to be prepared on both sides (Oracle session and Eclipse IDE). 
+        <h3 id="prepare-debug-eclipse"> Prepare Eclipse side </h3>
+        Prepare remote session as:
+        <div>
+        <img src="scala-inside-oracle-database--remote-debug--eclipse-config.png">
+        </div>
+        <br><br>
+        <div class="alert alert-warning">
+        <p> NOTE: <br> Before starting session, put breakpoints inside Eclipse editor on lines where you want to stop execution. </p>
+        </div>
+
+        <h3 id="prepare-debug-oracle"> Enable debugging in Oracle session </h3>
+        <pre> exec dbms_debug_jdwp.connect_tcp( 'localhost', 31123 ) </pre>
+        
+        <div class="alert alert-warning"> Port specified should match port specified on Eclipse side (previous picture). </div>
+
+        <h3 id="call-function"> Call stored function </h3>
+        <pre>SQL> select adder( 10, 12 ) from dual; </pre>
+
+        and you will see Eclipse application reaction, like:
+        <div><img src="scala-inside-oracle-database--remote-debug--debug-session.png">
+        </div>
+
+        From this point, you are in debug session and can evaluate variables, do step-by-step execution etc... Debug session does <strong>not</strong> stop with end of function call - you can run same or other stored functions and you will continue to stop on breakpoints. 
+
+        <h2 id="some-notes">Some notes </h2>
+
+        <h3 id="scala-ide-maturity"> Scala IDE state of the art </h3>
+        IDE support for Scala works, but is not on the same level as Java support. 
+        <br> For example, finding (currently selected) class/function usage (tree) or quickly get inheritance tree do not work as for Java code. (Of course, it is also more complicated to implement it)
+        <br> You have bigger chance to spot some Eclipse anomaly working with Scala code. 
+        <br> In any case, Scala IDE shows very good improvement comparing to previous versions. 
+
+        <br><br>
+        <div> Here, I wanted to use conditional breakpoint (as a way to do logging inside debug session without code change). It didn't work. (For this one I am not sure if Oracle session "contibuted"...). 
+        </p>
+
+        <h3 id="error--eclipse-not-started"> Error when debugging is not started on Eclipse side </h3>
+        <pre>ERROR at line 1:
+ORA-30683: failure establishing connection to debugger
+ORA-12541: TNS:no listener
+ORA-06512: at "SYS.DBMS_DEBUG_JDWP", line 68
+ORA-06512: at line 1</pre> <div id="write-scala-example">
+
+
+
+        <h3 id="error--no-grant-given"> When no debug grant is given </h3>
+        This one is serious (and on Oracle side): 
+        <pre>SQL> exec dbms_debug_jdwp.connect_tcp( 'localhost', 31123 )
+BEGIN dbms_debug_jdwp.connect_tcp( 'localhost', 31123 ); END;
+*
+ERROR at line 1:
+ORA-03113: end-of-file on communication channel</pre>
 
 		</div>
 
@@ -263,7 +334,7 @@ That's it.
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <!-- <script src="https://code.jquery.com/jquery.js"></script> -->
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+    <!-- <script src="js/bootstrap.min.js"></script> -->
 	
 	
 	
